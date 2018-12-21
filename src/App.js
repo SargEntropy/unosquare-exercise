@@ -10,7 +10,7 @@ class App extends React.Component {
 
     onSearchSubmit = async (repo) => {
         let response = await axios.get('https://api.github.com/search/repositories', {
-            params: { q: repo }
+            params: { q: repo, sort: 'stars' }
         });
         if (response.status === 200) {
             this.setState({ repositories: response.data.items });
