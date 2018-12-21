@@ -1,28 +1,30 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import axios from 'axios';
+import { Container } from 'reactstrap';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+import SearchComp from './components/SearchComp';
+import RepoList from './components/RepoList';
+
+class App extends React.Component {
+    state = { repositories: [] };
+
+    onSearchSubmit = async (repo) => {
+        let response = await axios.get('https://api.github.com/search/repositories', {
+            params: { q: repo }
+        });
+        if (response.status === 200) {
+            this.setState({ repositories: response.data.items });
+        }
+    }
+
+    render() {
+        return (
+            <Container>
+                <SearchComp onSubmit={this.onSearchSubmit} />
+                <RepoList repos={this.state.repositories} />
+            </Container>
+        );
+    }
 }
 
 export default App;
